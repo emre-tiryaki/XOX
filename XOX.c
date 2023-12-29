@@ -7,6 +7,7 @@ void table();
 void bot();
 int is_winning();
 void rebooting();
+int beraber();
 
 int game[3][3];
 
@@ -27,12 +28,27 @@ int main()
         scanf("%d",&collumn);
         row--;
         collumn--;
-        if (game[row][collumn] == 1 || game[row][collumn] == 2)
+        if (game[row][collumn] == 1 || game[row][collumn] == 2 || row > 2 || row < 0 || collumn < 0 || collumn > 2)
             printf("\nYou cant play here!!\nTry again\n\n");
         else
         {
             game[row][collumn] = 1;
-            if (is_winning(1) == 1)
+            if (is_winning(1) == 3)
+            {
+                table();
+                do
+                {
+                    printf("Draw!\nWant to try again?(Y/N): ");
+                    getchar();
+                    scanf("%c",&continous);
+                } while (toupper(continous) != 'Y' && toupper(continous) != 'N');
+                if (toupper(continous) == 'N')
+                    return 0;
+                else
+                    rebooting();        
+            }
+            
+            else if (is_winning(1) == 1)
             {
                 table();
                 do
@@ -114,9 +130,19 @@ int is_winning(int player)
             return 1;
     if ((game[0][0] == player && game[1][1] == player && game[2][2] == player)||(game[2][0] == player && game[1][1] == player && game[0][2] == player))
         return 1;
+    if (beraber() == -1)
+        return 3;
     return 0;
 }
 
+int beraber()
+{
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            if (game[i][j] == 0)
+                return 1;
+    return -1;
+}
 void rebooting()
 {
     for (int i = 0; i < 3; i++)
